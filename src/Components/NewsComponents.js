@@ -69,7 +69,7 @@ export class NewsComponents extends Component {
     return (
       <div>
         <InfiniteScroll
-            dataLength={this.state.article.length} //This is important field to render the next data
+            dataLength={this.state.article.length!=0?this.state.article.length:0} //This is important field to render the next data
             next={this.fetchData}
             hasMore={(this.state.totalPage!==this.state.article.length)?true:false}
             loader={<LoadingComponent/>}
@@ -83,7 +83,7 @@ export class NewsComponents extends Component {
               <h3 style={{ textAlign: 'center' }}>&#8593; Release to refresh</h3>
             }>
         {this.state.loading && <LoadingComponent />}
-        {!this.state.loading && <NewComponentsDesign data={this.state.article} cat={this.props.cat} />}
+        {!this.state.loading && this.state.article.length!=0 && <NewComponentsDesign data={this.state.article} cat={this.props.cat} />}
         {/* <div className="container d-flex flex-row flex-wrap justify-content-between">
             <button disabled={this.state.page<=1} type="submit" className="btn btn-primary" onClick={this.handlePreviousClick}>&laquo; Previous</button>
             <button disabled={Math.round(this.state.totalPage/20)===this.state.page} type="submit" className="btn btn-primary" onClick={this.handleNextClick}>Next &raquo;</button>
