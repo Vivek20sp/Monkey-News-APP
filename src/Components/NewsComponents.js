@@ -26,15 +26,25 @@ class NewsComponents extends Component {
 
     this.setState({ loading: true });
 
-    let response = await fetch(`https://newsapi.org/v2/top-headlines?country=in&page=${page}&category=${cat}&apiKey=${apiKey}&pageSize=20`);
-    let data = await response.json();
+    try {
+      let response = await fetch(`https://newsapi.org/v2/top-headlines?country=in&page=${page}&category=${cat}&apiKey=${apiKey}&pageSize=20`);
+      let data = await response.json();
 
-    this.setState((prevState) => ({
-      articles: [...prevState.articles, ...data.articles],
-      totalResults: data.totalResults,
-      loading: false,
-      page: prevState.page + 1,
-    }));
+      if (data.articles && Array.isArray(data.articles)) {
+        this.setState((prevState) => ({
+          articles: [...prevState.articles, ...data.articles],
+          totalResults: data.totalResults,
+          loading: false,
+          page: prevState.page + 1,
+        }));
+      } else {
+        console.error('Error fetching articles:', data);
+        this.setState({ loading: false });
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      this.setState({ loading: false });
+    }
 
     document.title = `Monkey-App-${cat}`;
     this.props.setState(100);
